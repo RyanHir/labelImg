@@ -20,13 +20,13 @@ jobs:
         run: |
           pyinstaller --hidden-import=pyqt5 --hidden-import=lxml -F -n "labelImg" -c labelImg.py -p ./libs -p ./ -w
       - name: Archive macOS app
-        if: startsWith(matrix.os, "macos")
+        if: startsWith(matrix.os, 'macos')
         run: |
           cd dist/
           tar czf labelImg.tgz labelImg.app
           rm -rf labelImg.app
       - name: Archive Linux app
-        if: startsWith(matrix.os, "ubuntu")
+        if: startsWith(matrix.os, 'ubuntu')
         run: |
           cd dist/
           tar czf labelImg.tgz labelImg

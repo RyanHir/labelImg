@@ -11,7 +11,7 @@ jobs:
           pip3 install -r requirements/requirements-generic-python3.txt
       - name: Build LabelImg
         run: |
-          pyrcc5 -o libs/resources.py
+          pyrcc5 -o libs/resources.py resources.qrc
       - name: Package LabelImg
         run: |
           pyinstaller --hidden-import=pyqt5 --hidden-import=lxml -F -n "labelImg" -c labelImg.py -p ./libs -p ./

@@ -5,14 +5,18 @@ jobs:
   package:
     strategy:
       matrix:
-        os: [macos-latest, windows-latest, ubuntu-latest]
+        os: ["macos-latest", "windows-latest", "ubuntu-latest"]
+        py: ["3.7", "3.8", "3.9", "3.10"]
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v3
+      - uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.py }}
       - name: Setup Python Environment
         run: |
-          pip3 install pyinstaller
-          pip3 install -r requirements/requirements-generic-python3.txt
+          pip install pyinstaller
+          pip install -r requirements/requirements-generic-python3.txt
       - name: Build LabelImg
         run: |
           pyrcc5 -o libs/resources.py resources.qrc

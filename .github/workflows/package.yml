@@ -4,24 +4,17 @@ on: [push, pull_request]
 jobs:
   package-macos:
     runs-on: macos-latest
-    env:
-      PIPENV_VENV_IN_PROJECT: 1
-      PIPENV_IGNORE_VIRTUALENVS: 1
     steps:
       - uses: actions/checkout@v3
       - name: Setup Python Environment
         run: |
-          pip3 install pipenv
-          pipenv install pyqt5 lxml
-          pipenv run pip install -r requirements/requirements-generic-python3.txt
+          pip3 install -r requirements/requirements-generic-python3.txt
       - name: Build LabelImg
         run: |
-          pipenv run make qt5py3
-          rm -rf build dist
+          pyrcc5 -o libs/resources.py
       - name: Package LabelImg
         run: |
-          pipenv run python setup.py py2app
-          open dist/labelImg.app
+          pyinstaller --hidden-import=pyqt5 --hidden-import=lxml -F -n "labelImg" -c labelImg.py -p ./libs -p ./
       - name: Archive macOS app
         run: |
           cd dist/

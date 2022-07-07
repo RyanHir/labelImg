@@ -2,8 +2,11 @@ name: Package
 on: [push, pull_request]
 
 jobs:
-  package-macos:
-    runs-on: macos-latest
+  package:
+    strategy:
+      matrix:
+        os: [macos-latest, windows-latest, ubuntu-latest]
+    runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v3
       - name: Setup Python Environment
@@ -15,48 +18,20 @@ jobs:
           pyrcc5 -o libs/resources.py resources.qrc
       - name: Package LabelImg
         run: |
-          pyinstaller --hidden-import=pyqt5 --hidden-import=lxml -F -n "labelImg" -c labelImg.py -p ./libs -p ./
+          pyinstaller --hidden-import=pyqt5 --hidden-import=lxml -F -n "labelImg" -c labelImg.py -p ./libs -p ./ -w
       - name: Archive macOS app
+        if: startsWith(matrix.os, "macos")
         run: |
           cd dist/
           tar czf labelImg.tgz labelImg.app
+          rm -rf labelImg.app
+      - name: Archive Linux app
+        if: startsWith(matrix.os, "ubuntu")
+        run: |
+          cd dist/
+          tar czf labelImg.tgz labelImg
+          rm -rf labelImg
       - uses: actions/upload-artifact@v3
         with:
-          name: macOS artifact
-          path: dist/labelImg.tgz
-  package-windows:
-    runs-on: windows-latest
-    steps:
-      - uses: actions/checkout@v3
-      - name: Setup Python Environment
-        run: |
-          pip3 install pyinstaller
-          pip3 install -r requirements/requirements-generic-python3.txt
-      - name: Build LabelImg
-        run: |
-          pyrcc5 -o libs/resources.py resources.qrc
-      - name: Package LabelImg
-        run: |
-          pyinstaller --hidden-import=pyqt5 --hidden-import=lxml -F -n "labelImg" -c labelImg.py -p ./libs -p ./
-      - uses: actions/upload-artifact@v3
-        with:
-          name: Windows artifact
-          path: dist/labelImg.exe
-  package-linux:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - name: Setup Python Environment
-        run: |
-          pip3 install pyinstaller
-          pip3 install -r requirements/requirements-generic-python3.txt
-      - name: Build LabelImg
-        run: |
-          pyrcc5 -o libs/resources.py resources.qrc
-      - name: Package LabelImg
-        run: |
-          pyinstaller --hidden-import=pyqt5 --hidden-import=lxml -F -n "labelImg" -c labelImg.py -p ./libs -p ./
-      - uses: actions/upload-artifact@v3
-        with:
-          name: Linux artifact
-          path: dist/labelImg
+          name: ${{ matrix.os }}
+          path: dist/labelImg.*

@@ -81,7 +81,7 @@ VirtualenvはQtとPythonのバージョン衝突問題を解消できます。
 
     brew install python3
     pip3 install pipenv
-    pipenv run pip install pyqt5==5.15.2 lxml
+    pipenv run pip install -r requirements/requirements-generic-python3.txt
     pipenv run make qt5py3
     pipenv run python3 labelImg.py
     [任意で] rm -rf build dist; python setup.py py2app -A;mv "dist/labelImg.app" /Applications

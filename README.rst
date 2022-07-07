@@ -61,7 +61,7 @@ Python 3 + Qt5
 .. code:: shell
 
     sudo apt-get install pyqt5-dev-tools
-    sudo pip3 install -r requirements/requirements-linux-python3.txt
+    sudo pip3 install -r requirements/requirements-generic-python3.txt
     make qt5py3
     python3 labelImg.py
     python3 labelImg.py [IMAGE_PATH] [PRE-DEFINED CLASS FILE]
@@ -78,7 +78,7 @@ Python 3 + Qt5
 
     or using pip
 
-    pip3 install pyqt5 lxml # Install qt and lxml by pip
+    pip3 install -r requirements/requirements-generic-python3.txt # Install qt and lxml by pip
 
     make qt5py3
     python3 labelImg.py
@@ -93,7 +93,7 @@ Virtualenv can avoid a lot of the QT / Python version issues
 
     brew install python3
     pip3 install pipenv
-    pipenv run pip install pyqt5==5.15.2 lxml
+    pipenv run pip install -r requirements/requirements-generic-python3.txt
     pipenv run make qt5py3
     pipenv run python3 labelImg.py
     [Optional] rm -rf build dist; python setup.py py2app -A;mv "dist/labelImg.app" /Applications
